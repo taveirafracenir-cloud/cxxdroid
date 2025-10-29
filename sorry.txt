@@ -1,0 +1,20 @@
+sorry.txt
+
+To the Android Open Source Project community and all affected contributors,
+
+We sincerely apologize for the unintentional inclusion of code and/or design elements derived from the Android project in this repository. This was an oversight on our part and not a deliberate attempt to avoid proper attribution or licensing.
+
+We acknowledge that portions of the project may be subject to the Android Open Source Project’s licensing terms (for example, the Apache License, Version 2.0) or other third-party licenses. We regret that the appropriate license notice and attributions were not included.
+
+Actions we are taking immediately:
+1. We will review the codebase to identify any files copied or derived from Android or other third-party projects.
+2. For any such files, we will either:
+   • add the correct copyright and license notices and retain the code in accordance with the original license; or
+   • remove or replace the code with original implementations.
+3. We will add a clear LICENSE file and attribution notes to the repository.
+4. We will reach out to affected contributors or upstream projects if required and cooperate to remedy the issue.
+
+We appreciate the work of the open-source community and regret any harm or confusion this oversight may have caused.
+
+Sincerely,
+The CXXDROID Team
