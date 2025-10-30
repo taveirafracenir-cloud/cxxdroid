@@ -1,0 +1,26 @@
+============================================================
+CXXDROID Operating System - Developers List
+============================================================
+
+Lead Developer:
+----------------
+taveirafracenir-cloud
+
+Core Team:
+----------------
+- enzo-dev
+- alex-cxx
+- maria-systems
+
+Contributors:
+----------------
+- bios-sim
+- ui-team
+- signal-module
+- kernel-dev
+- docs-maintainer
+
+Acknowledgements:
+----------------
+Thanks to the open-source community for inspiration and tools.
+This project is original and independent, with some ideas inspired by general OS development practices.
