@@ -4,3 +4,4 @@
 #define __x86_64
 #define __riscv
 #define __others
+#define __alls
