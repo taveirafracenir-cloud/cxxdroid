@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CXXDROID UI View Package</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f0f0f0; }
+        h1, h2, h3 { color: #2c3e50; }
+        pre { background-color: #ecf0f1; padding: 10px; border-radius: 5px; }
+        .class-section { margin-bottom: 30px; padding: 15px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+    <h1>CXXDROID UI View Package</h1>
+    <p>The <strong>ui.view</strong> package is the core of the CXXDROID graphical interface. 
+    It provides the essential classes and components for building interactive, animated, and accessible user interfaces.</p>
+
+    <h2>Package Structure</h2>
+    <ul>
+        <li><strong>animations/</strong> - Contains all UI animations like <em>Fade</em> and <em>Slide</em>.</li>
+        <li><strong>touch/</strong> - Handles touch input through <em>Input</em> and <em>TouchEvent</em>.</li>
+        <li><strong>Accessibility/</strong> - Manages accessibility features like TalkBack.</li>
+        <li><strong>webkit/</strong> - Provides a WebView component for displaying HTML content.</li>
+        <li><strong>Menu</strong> - Interactive menu system.</li>
+        <li><strong>View</strong> - Core class managing child views, layout, rendering, input, and accessibility.</li>
+    </ul>
+
+    <h2>Main Classes</h2>
+
+    <div class="class-section">
+        <h3>View</h3>
+        <p>The main class representing a UI element. Supports:</p>
+        <ul>
+            <li>Child views hierarchy</li>
+            <li>Layout and rendering</li>
+            <li>Animations (Fade, Slide)</li>
+            <li>Touch input handling</li>
+            <li>Accessibility / TalkBack integration</li>
+            <li>Menu and WebView components</li>
+            <li>LITHIUM sensor detection</li>
+        </ul>
+        <pre>
+View root = new View("root");
+root.initialize();
+root.layout();
+root.render();
+        </pre>
+    </div>
+
+    <div class="class-section">
+        <h3>Menu</h3>
+        <p>Interactive menu for navigating UI sections.</p>
+        <pre>
+Menu menu = new Menu();
+menu.addItem("Home");
+menu.addItem("Settings");
+menu.display();
+        </pre>
+    </div>
+
+    <div class="class-section">
+        <h3>WebView</h3>
+        <p>Displays HTML content in the UI. Supports:</p>
+        <ul>
+            <li>Loading HTML files</li>
+            <li>Rendering content inside the View hierarchy</li>
+        </ul>
+        <pre>
+WebView webView = new WebView();
+webView.loadUrl("example.html");
+webView.display();
+        </pre>
+    </div>
+
+    <div class="class-section">
+        <h3>Input & TouchEvent</h3>
+        <p>Handles touch input and events.</p>
+        <pre>
+Input input = new Input();
+input.addEvent(new Input.TouchEvent(100,200, Input.TouchEvent.Type.TAP));
+input.processEvents();
+        </pre>
+    </div>
+
+    <div class="class-section">
+        <h3>Animations</h3>
+        <p>Provide animated transitions for Views:</p>
+        <ul>
+            <li><strong>Fade</strong> - fade in/out UI elements</li>
+            <li><strong>Slide</strong> - move elements smoothly across the screen</li>
+        </ul>
+        <pre>
+Fade fade = new Fade(1000, true); // 1 second fade-in
+view.startAnimation(fade);
+
+Slide slide = new Slide(800,0,0,100,0); // slide menu
+view.startAnimation(slide);
+        </pre>
+    </div>
+
+    <div class="class-section">
+        <h3>Accessibility</h3>
+        <p>Supports TalkBack and other accessibility features:</p>
+        <pre>
+view.enableAccessibility();
+view.getTalkBack().speak("Clicked on Home");
+        </pre>
+    </div>
+
+    <h2>Usage Example</h2>
+    <pre>
+View root = new View("root");
+root.initialize();
+root.enableAccessibility();
+
+root.getInputHandler().addEvent(new Input.TouchEvent(10,10,Input.TouchEvent.Type.TAP));
+root.processInput();
+
+root.menu.display();
+root.webView.loadUrl("example.html");
+root.render();
+    </pre>
+
+    <p><em>CXXDROID UI View package provides the foundation for building modern, interactive, and accessible desktop interfaces.</em></p>
+</body>
+</html>
