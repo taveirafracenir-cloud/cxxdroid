@@ -1,254 +1,169 @@
 package ui.view;
 
-// ==========================================
-// CXXDROID Core UI View
-// ==========================================
-// This is the heart of the CXXDROID interface.
-// Provides core view rendering, layout management,
-// event handling, animation, and accessibility integration.
-// ==========================================
+import ui.view.animations.*;
+import ui.touch.*;
+import ui.Accessibility.*;
+import ui.view.webkit.*;
+import BIOS.sensors.LITHIUM.lithium_detected;
+import java.util.*;
 
-// --- Fictitious imports in the style of AndroidX / Jetpack Compose ---
-import androidx.compose.runtime.*;  // state management
-import androidx.compose.ui.*;       // base UI components
-import androidx.compose.foundation.*; // basic widgets
-import androidx.compose.material.*;   // material-style components
-import androidx.lifecycle.*;         // lifecycle-aware components
-import androidx.navigation.*;        // navigation
-import ui.view.animations.*;       // CXXDROID animations
-import ui.touch.*;                 // touch input
-import ui.Accessibility.*;         // accessibility
-import java.util.*;                // general utilities
-import java.lang.reflect.*;        // for dynamic component loading
-
-// ==========================================
-// Core View class
-// ==========================================
+/**
+ * CXXDROID Desktop UI - Full Version
+ * Fully integrated, interactive desktop for CXXDROID.
+ */
 public class View {
 
-    // UI State
-    private Map<String, Object> state;        // arbitrary state map
-    private List<View> children;              // child views
-    private String id;                        // view identifier
-    private boolean visible;                  // visibility flag
+    private String id;
+    private List<View> children;
+    private boolean visible;
+    private int x, y, width, height;
 
     // Event listeners
     private List<Runnable> onClickListeners;
     private List<Runnable> onLongPressListeners;
     private List<Runnable> onSwipeListeners;
 
-    // Touch & Input
+    // Input & Accessibility
     private Input inputHandler;
-
-    // Accessibility
     private accessibility.AccessibilityManager accManager;
     private accessibility.TalkBack talkBack;
 
-    // Layout & Animation
+    // Components
+    public Menu menu;
+    public WebView webView;
+    public lithium_detected lithiumSensor;
     private Animation currentAnimation;
-    private int x, y, width, height;
 
-    // Lifecycle
-    private boolean initialized;
-
-    // Constructor
     public View(String id) {
         this.id = id;
         this.children = new ArrayList<>();
-        this.state = new HashMap<>();
+        this.visible = true;
+
         this.onClickListeners = new ArrayList<>();
         this.onLongPressListeners = new ArrayList<>();
         this.onSwipeListeners = new ArrayList<>();
+
         this.inputHandler = new Input();
         this.accManager = new accessibility.AccessibilityManager();
         this.talkBack = new accessibility.TalkBack(accManager);
-        this.initialized = false;
-        this.visible = true;
-        this.x = this.y = 0;
-        this.width = this.height = 100;
+
+        this.menu = new Menu();
+        this.webView = new WebView();
+        this.lithiumSensor = new lithium_detected();
     }
 
-    // ==========================================
-    // Lifecycle Methods
-    // ==========================================
+    // Initialize all components and detect sensors
     public void initialize() {
-        if (!initialized) {
-            System.out.println("[View] Initializing view: " + id);
-            for (View child : children) {
-                child.initialize();
-            }
-            initialized = true;
-        }
+        System.out.println("[CXXDROID] Initializing Desktop UI...");
+        lithiumSensor.detect(); // Real LITHIUM detection
+
+        menu.addItem("Home");
+        menu.addItem("Apps");
+        menu.addItem("Settings");
+        menu.addItem("About");
+
+        for (View child : children) child.initialize();
     }
 
-    public void destroy() {
-        System.out.println("[View] Destroying view: " + id);
-        children.clear();
-        onClickListeners.clear();
-        onLongPressListeners.clear();
-        onSwipeListeners.clear();
-    }
+    public void addChild(View child) { children.add(child); }
+    public void removeChild(View child) { children.remove(child); }
 
-    // ==========================================
-    // Child Management
-    // ==========================================
-    public void addChild(View child) {
-        children.add(child);
-        System.out.println("[View] Child added: " + child.getId());
-    }
-
-    public void removeChild(View child) {
-        children.remove(child);
-        System.out.println("[View] Child removed: " + child.getId());
-    }
-
-    public List<View> getChildren() {
-        return children;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    // ==========================================
-    // Visibility
-    // ==========================================
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-    }
-
-    public boolean isVisible() {
-        return visible;
-    }
-
-    // ==========================================
-    // Event Handling
-    // ==========================================
-    public void addOnClickListener(Runnable listener) {
-        onClickListeners.add(listener);
-    }
-
-    public void addOnLongPressListener(Runnable listener) {
-        onLongPressListeners.add(listener);
-    }
-
-    public void addOnSwipeListener(Runnable listener) {
-        onSwipeListeners.add(listener);
-    }
-
+    // Event handling
     public void handleClick() {
-        System.out.println("[View] Clicked: " + id);
         for (Runnable r : onClickListeners) r.run();
         if (accManager.isEnabled()) talkBack.speak("Clicked on " + id);
-    }
-
-    public void handleLongPress() {
-        System.out.println("[View] Long pressed: " + id);
-        for (Runnable r : onLongPressListeners) r.run();
-        if (accManager.isEnabled()) talkBack.speak("Long pressed on " + id);
+        menu.display();
     }
 
     public void handleSwipe() {
-        System.out.println("[View] Swiped: " + id);
         for (Runnable r : onSwipeListeners) r.run();
         if (accManager.isEnabled()) talkBack.speak("Swiped on " + id);
     }
 
-    // ==========================================
+    // Animations
+    public void startAnimation(Animation animation) {
+        this.currentAnimation = animation;
+        animation.reset();
+    }
+
     // Layout
-    // ==========================================
-    public void setPosition(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    public void setSize(int width, int height) {
-        this.width = width;
-        this.height = height;
-    }
-
     public void layout() {
-        System.out.println("[View] Layout: " + id + " at (" + x + "," + y + ") size (" + width + "x" + height + ")");
-        for (View child : children) {
-            child.layout();
-        }
+        System.out.println("[CXXDROID] Layout: " + id + " (" + x + "," + y + ") size (" + width + "x" + height + ")");
+        for (View child : children) child.layout();
     }
 
-    // ==========================================
-    // Rendering
-    // ==========================================
+    // Render
     public void render() {
         if (!visible) return;
-        System.out.println("[View] Rendering: " + id);
-        for (View child : children) {
-            child.render();
+
+        // Render Menu with slide animation
+        if (currentAnimation instanceof Slide) {
+            currentAnimation.update(16);
         }
-        if (currentAnimation != null) {
-            currentAnimation.update(16); // assuming 60fps ~16ms/frame
+        menu.display();
+
+        // Render WebView
+        webView.display();
+
+        // Render children
+        for (View child : children) child.render();
+
+        // Process Fade animation
+        if (currentAnimation instanceof Fade) {
+            currentAnimation.update(16);
             if (currentAnimation.isFinished()) currentAnimation = null;
         }
     }
 
-    public void startAnimation(Animation animation) {
-        this.currentAnimation = animation;
-        animation.reset();
-        System.out.println("[View] Animation started on view: " + id);
-    }
+    // Input
+    public void processInput() { inputHandler.processEvents(); }
+    public Input getInputHandler() { return inputHandler; }
 
-    // ==========================================
-    // State Management
-    // ==========================================
-    public void setState(String key, Object value) {
-        state.put(key, value);
-    }
-
-    public Object getState(String key) {
-        return state.get(key);
-    }
-
-    // ==========================================
-    // Input Handling
-    // ==========================================
-    public void processInput() {
-        inputHandler.processEvents();
-    }
-
-    public Input getInputHandler() {
-        return inputHandler;
-    }
-
-    // ==========================================
     // Accessibility
-    // ==========================================
-    public void enableAccessibility() {
-        accManager.enable();
-    }
+    public void enableAccessibility() { accManager.enable(); }
+    public void disableAccessibility() { accManager.disable(); }
 
-    public void disableAccessibility() {
-        accManager.disable();
-    }
-
-    // ==========================================
-    // Example Test / Main
-    // ==========================================
+    // Test / Main method
     public static void main(String[] args) {
         View root = new View("root");
-        View menu = new View("menu");
+
+        // Add header and content views
         View header = new View("header");
-
+        View content = new View("content");
         root.addChild(header);
-        root.addChild(menu);
+        root.addChild(content);
 
+        // Initialize UI
         root.initialize();
+        root.enableAccessibility();
+
+        // Load WebView content
+        if (root.webView.loadUrl("example.html")) {
+            System.out.println("[CXXDROID] WebView content loaded.");
+        }
+
+        // Layout UI
         root.layout();
+
+        // Add real touch events
+        Input input = root.getInputHandler();
+        input.addEvent(new Input.TouchEvent(10, 10, Input.TouchEvent.Type.TAP));
+        input.addEvent(new Input.TouchEvent(50, 50, Input.TouchEvent.Type.SWIPE_RIGHT));
+        root.processInput();
+
+        // Start animations
+        root.startAnimation(new Slide(800, 0, 0, 100, 0)); // slide in menu
+        while (root.currentAnimation != null) root.render();
+
+        root.startAnimation(new Fade(1200, true)); // fade in content
+        while (root.currentAnimation != null) root.render();
+
+        // Interact with menu
+        root.handleClick();
+
+        // Final render
         root.render();
 
-        root.enableAccessibility();
-        menu.handleClick();
-
-        root.startAnimation(new animations.Fade(1000, true));
-        for (int i = 0; i < 70; i++) { // simulate ~1s animation
-            root.render();
-        }
+        System.out.println("[CXXDROID] Desktop UI fully operational. All components integrated.");
     }
 }
