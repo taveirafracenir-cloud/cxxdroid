@@ -1,0 +1,13 @@
+{
+  "vendor_name": "CXXDROID Partners",
+  "api_level": 1,
+  "drivers": {
+    "display": "vendor/drivers/display_vendor.cc",
+    "battery": "vendor/drivers/battery_vendor.cc",
+    "network": "vendor/drivers/network_vendor.cc"
+  },
+  "permissions": {
+    "vendor_access": true,
+    "system_override": false
+  }
+}
