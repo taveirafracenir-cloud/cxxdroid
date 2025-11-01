@@ -1,0 +1,3 @@
+CXXDROID CRYPTO MODULE
+Licensed under the Apache License, Version 2.0.
+Based partially on public-domain implementations of SHA-256 and AES.
